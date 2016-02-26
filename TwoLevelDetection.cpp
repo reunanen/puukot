@@ -24,7 +24,7 @@ void TwoLevelDetection(const cv::Mat& input, cv::Mat& output, double detectionLe
         cv::minMaxIdx(input, &minVal, &maxVal, NULL, NULL, temp.mask);
 
         if (maxVal >= detectionLevel) {
-            output.setTo(1, temp.mask);
+            output.setTo(std::numeric_limits<unsigned char>::max(), temp.mask);
         }
     }
 }
