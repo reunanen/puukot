@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="puukot">
+      <UniqueIdentifier>{fa7d668d-929c-4b3e-8f48-127b6943075a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="show-pixel-value">
+      <UniqueIdentifier>{4389e3bd-a01c-4ca6-9efd-e9c09077a69d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\RidgeFilter.cpp">
+      <Filter>puukot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\TwoLevelDetection.cpp">
+      <Filter>puukot</Filter>
+    </ClCompile>
+    <ClCompile Include="opencv-show-pixel-value\show-pixel-value.cpp">
+      <Filter>show-pixel-value</Filter>
+    </ClCompile>
+    <ClCompile Include="opencv-show-pixel-value\show-pixel-value-connecter.cpp">
+      <Filter>show-pixel-value</Filter>
+    </ClCompile>
+    <ClCompile Include="VisualTest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\RidgeFilter.h">
+      <Filter>puukot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\TwoLevelDetection.h">
+      <Filter>puukot</Filter>
+    </ClInclude>
+    <ClInclude Include="opencv-show-pixel-value\show-pixel-value.h">
+      <Filter>show-pixel-value</Filter>
+    </ClInclude>
+    <ClInclude Include="opencv-show-pixel-value\show-pixel-value-connecter.h">
+      <Filter>show-pixel-value</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="opencv-show-pixel-value\README.md">
+      <Filter>show-pixel-value</Filter>
+    </None>
+  </ItemGroup>
+</Project>
