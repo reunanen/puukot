@@ -4,7 +4,6 @@ struct RidgeFilterParameters {
     double alpha = 0.01; // increase to react more rapidly
     double beta = 0.99; // usually 1.0 - alpha
     int dilationWidth = 1; // usually 1 or 2
-    int suppressionWidth = 48;
     int outputType = -1; // -1: use input type
     int accumulatorType = CV_64FC1;
     double outputGain = 1.0;

@@ -1,4 +1,5 @@
 #include "../../RidgeFilter.h"
+#include "../../HighpassFilter.h"
 #include "../../TwoLevelDetection.h"
 #include "opencv-show-pixel-value/show-pixel-value-connecter.h"
 #include <opencv2/imgproc/imgproc.hpp>
@@ -24,6 +25,8 @@ cv::Mat GenerateRidgeFilterInputImage()
 
     inputImage += lineImage;
 
+    cv::circle(inputImage, cv::Point(300, 100), 3, 255, -1);
+
     return inputImage;
 }
 
@@ -33,13 +36,16 @@ void RunRidgeFilterTest()
 
     RidgeFilterParameters ridgeFilterParameters;
     ridgeFilterParameters.dilationWidth = 2;
-    ridgeFilterParameters.outputGain = 64;
+    ridgeFilterParameters.outputGain = 32;
 
     cv::Mat ridgeFilteringResult;
     RidgeFilterUpDown(inputImage, ridgeFilteringResult, ridgeFilterParameters);
 
+    cv::Mat highpassFilteredRidgeResult;
+    HighpassFilter(ridgeFilteringResult, highpassFilteredRidgeResult, HighpassFilterParameters(cv::Size(80, 25), CV_8UC1));
+
     cv::Mat detectionResult;
-    TwoLevelDetection(ridgeFilteringResult, detectionResult, 150, 50);
+    TwoLevelDetection(highpassFilteredRidgeResult, detectionResult, 50, 20);
 
     cv::Mat resultImage;
     cv::cvtColor(inputImage, resultImage, cv::COLOR_GRAY2BGR);
@@ -52,6 +58,7 @@ void RunRidgeFilterTest()
     connecter
         .Add("Input", inputImage)
         .Add("Ridge filtering result", ridgeFilteringResult)
+        .Add("Highpass filtered ridge result", highpassFilteredRidgeResult)
         .Add("Detection result", resultImage);
 
     cv::waitKey(0);

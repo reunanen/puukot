@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\HighpassFilter.cpp" />
     <ClCompile Include="..\..\RidgeFilter.cpp" />
     <ClCompile Include="..\..\TwoLevelDetection.cpp" />
     <ClCompile Include="opencv-show-pixel-value\show-pixel-value-connecter.cpp" />
@@ -26,6 +27,7 @@
     <ClCompile Include="VisualTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\HighpassFilter.h" />
     <ClInclude Include="..\..\RidgeFilter.h" />
     <ClInclude Include="..\..\TwoLevelDetection.h" />
     <ClInclude Include="opencv-show-pixel-value\show-pixel-value-connecter.h" />

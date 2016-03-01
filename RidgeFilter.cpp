@@ -24,8 +24,7 @@ void RidgeFilterDown(const cv::Mat& input, cv::Mat& output, const RidgeFilterPar
     for (int y = 0; y < input.rows; ++y) {
         cv::addWeighted(input.row(y), parameters.alpha, temp.accumulator, parameters.beta, 0, temp.accumulator, parameters.accumulatorType);
         cv::dilate(temp.accumulator, temp.accumulator, cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2 * parameters.dilationWidth + 1, 1)));
-        cv::blur(temp.accumulator, temp.suppressedAccumulator, cv::Size(2 * parameters.suppressionWidth + 1, 1), cv::Point(-1, -1), cv::BORDER_REPLICATE);
-        cv::subtract(temp.accumulator, temp.suppressedAccumulator, temp.suppressedAccumulator);
+        cv::subtract(temp.accumulator, cv::mean(temp.accumulator)[0], temp.suppressedAccumulator);
         temp.suppressedAccumulator.convertTo(output.row(y), output.type(), parameters.outputGain);
     }
 }
