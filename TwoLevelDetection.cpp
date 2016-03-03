@@ -9,6 +9,8 @@ void TwoLevelDetection(const cv::Mat& input, cv::Mat& output, const TwoLevelDete
 
     cv::threshold(input, output, parameters.measurementLevel, 1, cv::THRESH_BINARY);
 
+    // TODO: change the rest of this function to use ComponentFilter.
+
     temp.contours.clear();
     cv::findContours(output, temp.contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
 
