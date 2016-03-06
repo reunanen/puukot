@@ -7,6 +7,10 @@ void TwoLevelDetection(const cv::Mat& input, cv::Mat& output, const TwoLevelDete
         throw std::runtime_error("TwoLevelDetection: it is required that measurementLevel <= detectionLevel");
     }
 
+    if (input.data == output.data) {
+        throw std::runtime_error("TwoLevelDetection: in-place operation not supported");
+    }
+
     cv::threshold(input, output, parameters.measurementLevel, 1, cv::THRESH_BINARY);
 
     // TODO: change the rest of this function to use ComponentFilter.
