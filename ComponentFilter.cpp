@@ -5,10 +5,23 @@ ComponentFilterCriterionInput::ComponentFilterCriterionInput(const cv::Mat& inpu
     : inputImage(inputImage), contour(contour)
 {}
 
+cv::Mat DecideFindContoursTemp(const cv::Mat& input, cv::Mat& output, ComponentFilterTemp& temp)
+{
+    if (input.data == output.data) {
+        // In-place operation
+        input.copyTo(temp.findContoursTemp);
+        return temp.findContoursTemp;
+    }
+    else {
+        input.copyTo(output);
+        return output;
+    }
+}
+
 void ComponentFilter(const cv::Mat& input, cv::Mat& output, const ComponentFilterCriterion& criterion, ComponentFilterTemp& temp)
 {
-    input.copyTo(output);
-    cv::findContours(output, temp.contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+    cv::Mat findContoursTemp = DecideFindContoursTemp(input, output, temp);
+    cv::findContours(findContoursTemp, temp.contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
     output.setTo(0);
     for (size_t i = 0, end = temp.contours.size(); i < end; ++i) {
         ComponentFilterCriterionInput componentFilterCriterionInput(input, temp.contours[i]);

@@ -26,6 +26,7 @@ public:
 struct ComponentFilterTemp
 {
     std::vector<std::vector<cv::Point>> contours;
+    cv::Mat findContoursTemp;
 };
 
 void ComponentFilter(const cv::Mat& input, cv::Mat& output, const ComponentFilterCriterion& criterion, ComponentFilterTemp& temp = ComponentFilterTemp());
