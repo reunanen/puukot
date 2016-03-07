@@ -2,18 +2,24 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 // This is a sample criterion: minimum contour length.
-bool MinimumContourLengthCriterion::operator()(ComponentFilterCriterionInput& input) const
+bool MinimumContourLengthCriterion::operator()(const ComponentFilterCriterionInput& input) const
 {
     return input.contour.size() >= minimumContourLength;
 }
 
-// Another sample criterion: minimum area.
-bool MinimumAreaCriterion::operator()(ComponentFilterCriterionInput& input) const
+// In practice, many criteria are based on a mask, so let's not repeat ourselves.
+const cv::Mat& MaskBasedCriterion::GetMask(const ComponentFilterCriterionInput& input) const
 {
-    temp.create(input.inputImage.size(), CV_8UC1);
-    temp.setTo(0);
-    cv::drawContours(temp, std::vector<std::vector<cv::Point>>({ input.contour }), 0, 255, -1);
-    return cv::countNonZero(temp) >= minimumArea;
+    mask.create(input.inputImage.size(), CV_8UC1);
+    mask.setTo(0);
+    cv::drawContours(mask, std::vector<std::vector<cv::Point>>({ input.contour }), 0, 255, -1);
+    return mask;
+}
+
+// Another sample criterion: minimum area.
+bool MinimumAreaCriterion::operator()(const ComponentFilterCriterionInput& input) const
+{
+    return cv::countNonZero(GetMask(input)) >= minimumArea;
 }
 
 // Adapted from: http://stackoverflow.com/questions/14854592/retrieve-elongation-feature-in-python-opencv-what-kind-of-moment-it-supposed-to
@@ -25,11 +31,8 @@ double CalculateElongation(const cv::Moments& moments)
 }
 
 // Yet another sample: minimum elongation.
-bool MinimumElongationCriterion::operator()(ComponentFilterCriterionInput& input) const
+bool MinimumElongationCriterion::operator()(const ComponentFilterCriterionInput& input) const
 {
-    temp.create(input.inputImage.size(), CV_8UC1);
-    temp.setTo(0);
-    cv::drawContours(temp, std::vector<std::vector<cv::Point>>({ input.contour }), 0, 255, -1);
-    const double elongation = CalculateElongation(cv::moments(temp));
+    const double elongation = CalculateElongation(cv::moments(GetMask(input)));
     return elongation >= minimumElongation;
 }

@@ -19,7 +19,7 @@ public:
     virtual ~ComponentFilterCriterion() {}
 
     // Return true if the component shall be accepted.
-    virtual bool operator()(ComponentFilterCriterionInput& input) const = 0;
+    virtual bool operator()(const ComponentFilterCriterionInput& input) const = 0;
 };
 
 // Helper struct to allow keeping the allocated memory instead of having to allocate it over and over again.

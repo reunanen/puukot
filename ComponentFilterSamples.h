@@ -6,34 +6,42 @@ class MinimumContourLengthCriterion : public ComponentFilterCriterion
 public:
     MinimumContourLengthCriterion(size_t minimumContourLength) : minimumContourLength(minimumContourLength) {}
     virtual ~MinimumContourLengthCriterion() {}
-    virtual bool operator()(ComponentFilterCriterionInput& input) const;
+    virtual bool operator()(const ComponentFilterCriterionInput& input) const;
 
 private:
     const size_t minimumContourLength;
 };
 
+// In practice, many criteria are based on a mask, so let's offer this class as a convenience.
+class MaskBasedCriterion : public ComponentFilterCriterion
+{
+protected:
+    const cv::Mat& GetMask(const ComponentFilterCriterionInput& input) const;
+
+private:
+    mutable cv::Mat mask;
+};
+
 // Another sample criterion: minimum area.
-class MinimumAreaCriterion : public ComponentFilterCriterion
+class MinimumAreaCriterion : public MaskBasedCriterion
 {
 public:
     MinimumAreaCriterion(int minimumArea) : minimumArea(minimumArea) {}
     virtual ~MinimumAreaCriterion() {}
-    virtual bool operator()(ComponentFilterCriterionInput& input) const;
+    virtual bool operator()(const ComponentFilterCriterionInput& input) const;
 
 private:
     const int minimumArea;
-    mutable cv::Mat temp;
 };
 
 // Yet another sample: minimum elongation.
-class MinimumElongationCriterion : public ComponentFilterCriterion
+class MinimumElongationCriterion : public MaskBasedCriterion
 {
 public:
     MinimumElongationCriterion(double minimumElongation) : minimumElongation(minimumElongation) {}
     virtual ~MinimumElongationCriterion() {}
-    virtual bool operator()(ComponentFilterCriterionInput& input) const;
+    virtual bool operator()(const ComponentFilterCriterionInput& input) const;
 
 private:
     const double minimumElongation;
-    mutable cv::Mat temp;
 };
