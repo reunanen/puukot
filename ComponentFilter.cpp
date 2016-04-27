@@ -1,6 +1,10 @@
 #include "ComponentFilter.h"
 #include <opencv2/imgproc/imgproc.hpp>
 
+#ifdef _DEBUG
+#include <iterator> // std::inserter
+#endif
+
 ComponentFilterCriterionInput::ComponentFilterCriterionInput(const cv::Mat& inputImage, const std::vector<cv::Point>& contour)
     : inputImage(inputImage), contour(contour)
 {}
