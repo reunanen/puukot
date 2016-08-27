@@ -1,7 +1,7 @@
 #include "TwoLevelDetection.h"
 #include <opencv2/imgproc/imgproc.hpp>
 
-void TwoLevelDetection(const cv::Mat& input, cv::Mat& output, const TwoLevelDetectionParameters& parameters, TwoLevelDetectionTemp& temp)
+unsigned int TwoLevelDetection(const cv::Mat& input, cv::Mat& output, const TwoLevelDetectionParameters& parameters, TwoLevelDetectionTemp& temp)
 {
     if (parameters.measurementLevel > parameters.detectionLevel) {
         throw std::runtime_error("TwoLevelDetection: it is required that measurementLevel <= detectionLevel");
@@ -9,6 +9,12 @@ void TwoLevelDetection(const cv::Mat& input, cv::Mat& output, const TwoLevelDete
 
     if (input.data == output.data) {
         throw std::runtime_error("TwoLevelDetection: in-place operation not supported");
+    }
+
+    if (!parameters.findingsExpected && cv::countNonZero(input >= parameters.detectionLevel) == 0) {
+        // We can't possibly have anything to return, so let's just take a quick way out.
+        output.setTo(0);
+        return 0;
     }
 
     cv::threshold(input, output, parameters.measurementLevel, 1, cv::THRESH_BINARY);
@@ -22,6 +28,8 @@ void TwoLevelDetection(const cv::Mat& input, cv::Mat& output, const TwoLevelDete
 
     output.setTo(0);
 
+    unsigned int regionsAccepted = 0;
+
     for (size_t i = 0, end = temp.contours.size(); i < end; ++i) {
         if (temp.contours[i].size() >= parameters.minContourLength) {
             temp.mask.setTo(0);
@@ -32,13 +40,16 @@ void TwoLevelDetection(const cv::Mat& input, cv::Mat& output, const TwoLevelDete
 
             if (maxVal >= parameters.detectionLevel) {
                 output.setTo(std::numeric_limits<unsigned char>::max(), temp.mask);
+                ++regionsAccepted;
             }
         }
     }
+
+    return regionsAccepted;
 }
 
 // A convenience wrapper for backward compatibility. TODO: remove this.
-void TwoLevelDetection(const cv::Mat& input, cv::Mat& output, double detectionLevel, double measurementLevel, TwoLevelDetectionTemp& temp)
+unsigned int TwoLevelDetection(const cv::Mat& input, cv::Mat& output, double detectionLevel, double measurementLevel, TwoLevelDetectionTemp& temp)
 {
-    TwoLevelDetection(input, output, TwoLevelDetectionParameters(detectionLevel, measurementLevel), temp);
+    return TwoLevelDetection(input, output, TwoLevelDetectionParameters(detectionLevel, measurementLevel), temp);
 }
