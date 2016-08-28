@@ -13,6 +13,7 @@ unsigned int TwoLevelDetection(const cv::Mat& input, cv::Mat& output, const TwoL
 
     if (!parameters.findingsExpected && cv::countNonZero(input >= parameters.detectionLevel) == 0) {
         // We can't possibly have anything to return, so let's just take a quick way out.
+        output.create(input.size(), CV_8UC1);
         output.setTo(0);
         return 0;
     }
