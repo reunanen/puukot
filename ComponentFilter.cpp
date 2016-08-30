@@ -22,7 +22,7 @@ cv::Mat DecideFindContoursTemp(const cv::Mat& input, cv::Mat& output, ComponentF
     }
 }
 
-void ComponentFilter(const cv::Mat& input, cv::Mat& output, const ComponentFilterCriterion& criterion, ComponentFilterTemp& temp)
+unsigned int ComponentFilter(const cv::Mat& input, cv::Mat& output, const ComponentFilterCriterion& criterion, ComponentFilterTemp& temp)
 {
     cv::Mat findContoursTemp = DecideFindContoursTemp(input, output, temp);
     cv::findContours(findContoursTemp, temp.contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
@@ -48,7 +48,9 @@ void ComponentFilter(const cv::Mat& input, cv::Mat& output, const ComponentFilte
     };
     std::sort(inputPoints.begin(), inputPoints.end(), sortCriterion);
     std::sort(outputPoints.begin(), outputPoints.end(), sortCriterion);
-    std::set_difference(inputPoints.begin(), inputPoints.end(), outputPoints.begin(), outputPoints.end(), std::inserter(outputPointsLessInputPoints, outputPointsLessInputPoints.begin()), sortCriterion);
+    std::set_difference(outputPoints.begin(), outputPoints.end(), inputPoints.begin(), inputPoints.end(), std::inserter(outputPointsLessInputPoints, outputPointsLessInputPoints.begin()), sortCriterion);
     assert(outputPointsLessInputPoints.empty());
 #endif
+
+    return static_cast<unsigned int>(temp.contours.size());
 }

@@ -29,6 +29,7 @@ struct ComponentFilterTemp
     cv::Mat findContoursTemp;
 };
 
-void ComponentFilter(const cv::Mat& input, cv::Mat& output, const ComponentFilterCriterion& criterion, ComponentFilterTemp& temp = ComponentFilterTemp());
+// Returns the number of components found.
+unsigned int ComponentFilter(const cv::Mat& input, cv::Mat& output, const ComponentFilterCriterion& criterion, ComponentFilterTemp& temp = ComponentFilterTemp());
 
 #endif // PUUKOT_COMPONENT_FILTER
