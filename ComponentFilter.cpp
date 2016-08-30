@@ -27,10 +27,12 @@ unsigned int ComponentFilter(const cv::Mat& input, cv::Mat& output, const Compon
     cv::Mat findContoursTemp = DecideFindContoursTemp(input, output, temp);
     cv::findContours(findContoursTemp, temp.contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
     output.setTo(0);
+    unsigned int acceptedComponents = 0;
     for (size_t i = 0, end = temp.contours.size(); i < end; ++i) {
         ComponentFilterCriterionInput componentFilterCriterionInput(input, temp.contours[i]);
         if (criterion(componentFilterCriterionInput)) {
             cv::drawContours(output, temp.contours, static_cast<int>(i), std::numeric_limits<unsigned char>::max(), -1);
+            ++acceptedComponents;
         }
     }
 
@@ -52,5 +54,5 @@ unsigned int ComponentFilter(const cv::Mat& input, cv::Mat& output, const Compon
     assert(outputPointsLessInputPoints.empty());
 #endif
 
-    return static_cast<unsigned int>(temp.contours.size());
+    return acceptedComponents;
 }
