@@ -8,23 +8,22 @@
 // shortcut in the processing. (Evaluating the shortcut is not free, which is why it can be disabled.)
 
 struct TwoLevelDetectionParameters {
-    TwoLevelDetectionParameters(double detectionLevel, double measurementLevel, size_t minContourLength = 0, bool findingsExpected = false)
+    TwoLevelDetectionParameters(double detectionLevel, double measurementLevel, bool findingsExpected = false)
         : detectionLevel(detectionLevel)
         , measurementLevel(measurementLevel)
-        , minContourLength(minContourLength)
         , findingsExpected(findingsExpected)
     {}
 
     double detectionLevel;
     double measurementLevel;
-    size_t minContourLength;
     bool findingsExpected;
 };
 
 // Helper struct to allow keeping the allocated memory instead of having to allocate it over and over again.
 struct TwoLevelDetectionTemp {
-    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Point> detectionSeeds;
     cv::Mat mask;
+    cv::Mat zeroRow;
 };
 
 // Returns the number of regions found.

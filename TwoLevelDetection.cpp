@@ -1,6 +1,24 @@
 #include "TwoLevelDetection.h"
 #include <opencv2/imgproc/imgproc.hpp>
 
+namespace {
+    bool AnyFindings(const cv::Mat& input, TwoLevelDetectionTemp& temp) {
+        if (!temp.zeroRow.data || temp.zeroRow.size() != input.row(0).size() || temp.zeroRow.type() != input.type()) {
+            temp.zeroRow.create(input.row(0).size(), input.type());
+            temp.zeroRow.setTo(0);
+        }
+        const void* zeroRowPtr = temp.zeroRow.ptr(0);
+        const size_t rowLengthInBytes = input.cols * input.elemSize();
+        for (int row = 0; row < input.rows; ++row) {
+            const void* rowPtr = input.ptr(row);
+            if (memcmp(rowPtr, zeroRowPtr, rowLengthInBytes) != 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
 unsigned int TwoLevelDetection(const cv::Mat& input, cv::Mat& output, const TwoLevelDetectionParameters& parameters, TwoLevelDetectionTemp& temp)
 {
     if (parameters.measurementLevel > parameters.detectionLevel) {
@@ -11,7 +29,8 @@ unsigned int TwoLevelDetection(const cv::Mat& input, cv::Mat& output, const TwoL
         throw std::runtime_error("TwoLevelDetection: in-place operation not supported");
     }
 
-    if (!parameters.findingsExpected && cv::countNonZero(input >= parameters.detectionLevel) == 0) {
+    cv::threshold(input, temp.mask, parameters.detectionLevel, 1, cv::THRESH_BINARY);
+    if (!AnyFindings(temp.mask, temp)) {
         // We can't possibly have anything to return, so let's just take a quick way out.
         output.create(input.size(), CV_8UC1);
         output.setTo(0);
@@ -20,31 +39,21 @@ unsigned int TwoLevelDetection(const cv::Mat& input, cv::Mat& output, const TwoL
 
     cv::threshold(input, output, parameters.measurementLevel, 1, cv::THRESH_BINARY);
 
-    // TODO: change the rest of this function to use ComponentFilter.
-
-    temp.contours.clear();
-    cv::findContours(output, temp.contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
-    temp.mask.create(input.size(), CV_8UC1);
-
-    output.setTo(0);
-
     unsigned int regionsAccepted = 0;
 
-    for (size_t i = 0, end = temp.contours.size(); i < end; ++i) {
-        if (temp.contours[i].size() >= parameters.minContourLength) {
-            temp.mask.setTo(0);
-            cv::drawContours(temp.mask, temp.contours, static_cast<int>(i), 255, -1);
+    temp.detectionSeeds.clear();
+    cv::findNonZero(temp.mask, temp.detectionSeeds);
 
-            double minVal, maxVal;
-            cv::minMaxIdx(input, &minVal, &maxVal, NULL, NULL, temp.mask);
-
-            if (maxVal >= parameters.detectionLevel) {
-                output.setTo(std::numeric_limits<unsigned char>::max(), temp.mask);
+    for (const cv::Point& seedPoint : temp.detectionSeeds) {
+        unsigned char outputValue = output.at<unsigned char>(seedPoint);
+        assert(outputValue == 1 || outputValue == 128);
+        if (outputValue == 1) {
+            cv::floodFill(output, seedPoint, 128);
                 ++regionsAccepted;
             }
         }
-    }
+
+    cv::threshold(output, output, 127, std::numeric_limits<unsigned char>::max(), cv::THRESH_BINARY);
 
     return regionsAccepted;
 }
