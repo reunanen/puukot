@@ -23,7 +23,7 @@ private:
 };
 
 // Another sample criterion: minimum area.
-class MinimumAreaCriterion : public MaskBasedCriterion
+class MinimumAreaCriterion : public ComponentFilterCriterion
 {
 public:
     MinimumAreaCriterion(int minimumArea) : minimumArea(minimumArea) {}

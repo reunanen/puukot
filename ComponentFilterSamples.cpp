@@ -19,7 +19,7 @@ const cv::Mat& MaskBasedCriterion::GetMask(const ComponentFilterCriterionInput& 
 // Another sample criterion: minimum area.
 bool MinimumAreaCriterion::operator()(const ComponentFilterCriterionInput& input) const
 {
-    return cv::countNonZero(GetMask(input)) >= minimumArea;
+    return cv::contourArea(input.contour) >= minimumArea;
 }
 
 // Adapted from: http://stackoverflow.com/questions/14854592/retrieve-elongation-feature-in-python-opencv-what-kind-of-moment-it-supposed-to
