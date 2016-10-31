@@ -20,12 +20,15 @@ public:
 
     // Return true if the component shall be accepted.
     virtual bool operator()(const ComponentFilterCriterionInput& input) const = 0;
+
+    virtual bool HandleHoles() const { return true; }
 };
 
 // Helper struct to allow keeping the allocated memory instead of having to allocate it over and over again.
 struct ComponentFilterTemp
 {
     std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i> hierarchy;
     cv::Mat findContoursTemp;
 };
 

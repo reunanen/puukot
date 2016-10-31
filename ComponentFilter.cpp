@@ -25,14 +25,25 @@ cv::Mat DecideFindContoursTemp(const cv::Mat& input, cv::Mat& output, ComponentF
 unsigned int ComponentFilter(const cv::Mat& input, cv::Mat& output, const ComponentFilterCriterion& criterion, ComponentFilterTemp& temp)
 {
     cv::Mat findContoursTemp = DecideFindContoursTemp(input, output, temp);
-    cv::findContours(findContoursTemp, temp.contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+    cv::findContours(findContoursTemp, temp.contours, temp.hierarchy, criterion.HandleHoles() ? cv::RETR_CCOMP : cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
     output.setTo(0);
     unsigned int acceptedComponents = 0;
     for (size_t i = 0, end = temp.contours.size(); i < end; ++i) {
-        ComponentFilterCriterionInput componentFilterCriterionInput(input, temp.contours[i]);
-        if (criterion(componentFilterCriterionInput)) {
-            cv::drawContours(output, temp.contours, static_cast<int>(i), std::numeric_limits<unsigned char>::max(), -1);
-            ++acceptedComponents;
+        if (temp.hierarchy[i][3] < 0) {
+            // exterior
+            ComponentFilterCriterionInput componentFilterCriterionInput(input, temp.contours[i]);
+            if (criterion(componentFilterCriterionInput)) {
+                cv::drawContours(output, temp.contours, static_cast<int>(i), std::numeric_limits<unsigned char>::max(), -1);
+                ++acceptedComponents;
+            }
+        }
+    }
+    if (criterion.HandleHoles()) {
+        for (size_t i = 0, end = temp.contours.size(); i < end; ++i) {
+            if (temp.hierarchy[i][3] >= 0) {
+                // hole
+                cv::drawContours(output, temp.contours, static_cast<int>(i), 0, -1);
+            }
         }
     }
 
