@@ -26,6 +26,13 @@ unsigned int ComponentFilter(const cv::Mat& input, cv::Mat& output, const Compon
 {
     cv::Mat findContoursTemp = DecideFindContoursTemp(input, output, temp);
     cv::findContours(findContoursTemp, temp.contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+#ifdef _DEBUG
+    cv::Mat inputWithHolesFilled(input.size(), CV_8UC1);
+    inputWithHolesFilled.setTo(0);
+    cv::drawContours(inputWithHolesFilled, temp.contours, -1, std::numeric_limits<unsigned char>::max(), -1);
+#endif
+
     output.setTo(0);
     unsigned int acceptedComponents = 0;
     for (size_t i = 0, end = temp.contours.size(); i < end; ++i) {
@@ -39,8 +46,8 @@ unsigned int ComponentFilter(const cv::Mat& input, cv::Mat& output, const Compon
 #ifdef _DEBUG
     // We can only filter - we can't introduce any new components. Ever.
     std::vector<cv::Point> inputPoints, outputPoints, outputPointsLessInputPoints;
-    if (cv::countNonZero(input)) {
-        cv::findNonZero(input, inputPoints);
+    if (cv::countNonZero(inputWithHolesFilled)) {
+        cv::findNonZero(inputWithHolesFilled, inputPoints);
     }
     if (cv::countNonZero(output)) {
         cv::findNonZero(output, outputPoints);
