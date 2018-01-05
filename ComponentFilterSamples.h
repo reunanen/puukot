@@ -1,3 +1,6 @@
+#ifndef PUUKOT_COMPONENT_FILTER_SAMPLES
+#define PUUKOT_COMPONENT_FILTER_SAMPLES
+
 #include "ComponentFilter.h"
 
 // This is a sample criterion: minimum contour length.
@@ -45,3 +48,5 @@ public:
 private:
     const double minimumElongation;
 };
+
+#endif // PUUKOT_COMPONENT_FILTER_SAMPLES

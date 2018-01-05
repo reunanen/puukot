@@ -1,3 +1,6 @@
+#ifndef PUUKOT_TWO_LEVEL_DETECTION
+#define PUUKOT_TWO_LEVEL_DETECTION
+
 #include <opencv2/core/core.hpp>
 
 // To be detected, at least one pixel in each blob must exceed detectionLevel.
@@ -31,3 +34,5 @@ unsigned int TwoLevelDetection(const cv::Mat& input, cv::Mat& output, const TwoL
 
 // A convenience wrapper for backward compatibility. TODO: remove this.
 unsigned int TwoLevelDetection(const cv::Mat& input, cv::Mat& output, double detectionLevel, double measurementLevel, TwoLevelDetectionTemp& temp = TwoLevelDetectionTemp());
+
+#endif // PUUKOT_TWO_LEVEL_DETECTION
