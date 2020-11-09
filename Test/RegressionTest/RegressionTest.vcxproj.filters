@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Code Being Tested">
+      <UniqueIdentifier>{c1bd8062-b01f-4c71-b368-8ddd40a87cee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{48576d19-c8ed-4af1-8166-2a4adea77a63}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\PyrMatchTemplate.cpp">
+      <Filter>Code Being Tested</Filter>
+    </ClCompile>
+    <ClCompile Include="RegressionTestMain.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="PyrMatchTemplateTest.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\PyrMatchTemplate.h">
+      <Filter>Code Being Tested</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -10,6 +10,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VisualTest", "VisualTest\Vi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "opencv", "opencv-build-vs\opencv.vcxproj", "{6B88C78E-FE6F-42B1-B6F8-3EA3D2ACF05F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RegressionTest", "RegressionTest\RegressionTest.vcxproj", "{483C901A-6122-43D4-96E3-0D1F34563F22}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6B88C78E-FE6F-42B1-B6F8-3EA3D2ACF05F} = {6B88C78E-FE6F-42B1-B6F8-3EA3D2ACF05F}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -24,6 +29,10 @@ Global
 		{6B88C78E-FE6F-42B1-B6F8-3EA3D2ACF05F}.Debug|x64.Build.0 = Debug|x64
 		{6B88C78E-FE6F-42B1-B6F8-3EA3D2ACF05F}.Release|x64.ActiveCfg = Release|x64
 		{6B88C78E-FE6F-42B1-B6F8-3EA3D2ACF05F}.Release|x64.Build.0 = Release|x64
+		{483C901A-6122-43D4-96E3-0D1F34563F22}.Debug|x64.ActiveCfg = Debug|x64
+		{483C901A-6122-43D4-96E3-0D1F34563F22}.Debug|x64.Build.0 = Debug|x64
+		{483C901A-6122-43D4-96E3-0D1F34563F22}.Release|x64.ActiveCfg = Release|x64
+		{483C901A-6122-43D4-96E3-0D1F34563F22}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

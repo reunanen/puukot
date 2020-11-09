@@ -4,3 +4,6 @@
 [submodule "Test/opencv-build-vs"]
 	path = Test/opencv-build-vs
 	url = https://github.com/reunanen/opencv-build-vs
+[submodule "Test/RegressionTest/picotest"]
+	path = Test/RegressionTest/picotest
+	url = https://github.com/reunanen/picotest
