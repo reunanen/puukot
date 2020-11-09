@@ -1,5 +1,8 @@
 #include "picotest/picotest.h"
+
 #include "../../PyrMatchTemplate.h"
+#include "../../MinMax.h"
+
 #include <opencv2/imgproc/imgproc.hpp>
 
 class TestPyrMatchTemplate : public ::testing::Test {
@@ -14,14 +17,14 @@ protected:
     virtual void TearDown() {} // Code here will be called immediately after each test (right before the destructor).
 };
 
-cv::Mat GeneratePyrTemplateMatchInputImage()
+cv::Mat GeneratePyrTemplateMatchInputImage(int scaler)
 {
-    cv::Mat image(6000, 8000, CV_8UC1);
+    cv::Mat image(600 * scaler, 800 * scaler, CV_8UC1);
     cv::randn(image, 64, 32);
 
-    cv::Mat circle(6000, 8000, CV_8UC1);
+    cv::Mat circle(image.size(), CV_8UC1);
     circle = 0;
-    cv::circle(circle, cv::Point(4000, 3000), 2000, 128, cv::FILLED);
+    cv::circle(circle, cv::Point(400 * scaler, 300 * scaler), 200 * scaler, 128, cv::FILLED);
 
     image += circle;
 
@@ -30,15 +33,46 @@ cv::Mat GeneratePyrTemplateMatchInputImage()
 
 TEST_F(TestPyrMatchTemplate, PyramidBasedTemplateMatchingWorks)
 {
-    cv::Mat inputImage = GeneratePyrTemplateMatchInputImage();
-    cv::Mat templ = inputImage(cv::Rect(5000, 4000, 1000, 1000));
+    int scaler = 1;
 
+    cv::Mat inputImage = GeneratePyrTemplateMatchInputImage(scaler);
+    cv::Mat templ = inputImage(cv::Rect(500 * scaler, 400 * scaler, 100 * scaler, 100 * scaler));
+
+    cv::Mat cvMatchTemplateResult, pyrMatchTemplateResult;
+
+    {
+        const int method = cv::TM_SQDIFF;
+
+        cv::matchTemplate(inputImage, templ, cvMatchTemplateResult, method);
+        PyrMatchTemplate(inputImage, templ, pyrMatchTemplateResult, method);
+
+        const auto stdMinMax = FindMinMax(cvMatchTemplateResult);
+        const auto pyrMinMax = FindMinMax(pyrMatchTemplateResult);
+
+        EXPECT_EQ(stdMinMax.minLocation, pyrMinMax.minLocation);
+        EXPECT_NEAR(stdMinMax.minValue, pyrMinMax.minValue, stdMinMax.maxValue * 1e-6);
+    }
+
+    {
+        const int method = cv::TM_CCORR;
+
+        cv::matchTemplate(inputImage, templ, cvMatchTemplateResult, method);
+        PyrMatchTemplate(inputImage, templ, pyrMatchTemplateResult, method);
+
+        const auto stdMinMax = FindMinMax(cvMatchTemplateResult);
+        const auto pyrMinMax = FindMinMax(pyrMatchTemplateResult);
+
+        EXPECT_EQ(stdMinMax.maxLocation, pyrMinMax.maxLocation);
+        EXPECT_NEAR(stdMinMax.maxValue, pyrMinMax.maxValue, stdMinMax.maxValue * 1e-6);
+    }
 }
 
 TEST_F(TestPyrMatchTemplate, PyramidBasedTemplateMatchingIsFast)
 {
-    cv::Mat inputImage = GeneratePyrTemplateMatchInputImage();
-    cv::Mat templ = inputImage(cv::Rect(5000, 4000, 1000, 1000));
+    int scaler = 10;
+
+    cv::Mat inputImage = GeneratePyrTemplateMatchInputImage(scaler);
+    cv::Mat templ = inputImage(cv::Rect(500 * scaler, 400 * scaler, 100 * scaler, 100 * scaler));
 
     cv::Mat cvMatchTemplateResult, pyrMatchTemplateResult;
 
@@ -60,5 +94,10 @@ TEST_F(TestPyrMatchTemplate, PyramidBasedTemplateMatchingIsFast)
     const auto duration1_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration1).count();
     const auto duration2_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration2).count();
 
+    // The pyramid-based method should be faster; otherwise it's just plain useless.
+#ifdef _DEBUG
     EXPECT_LT(duration2_ms, duration1_ms * 0.8);
+#else
+    EXPECT_LT(duration2_ms, duration1_ms * 0.1);
+#endif
 }

@@ -18,9 +18,15 @@
     <ClCompile Include="PyrMatchTemplateTest.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\MinMax.cpp">
+      <Filter>Code Being Tested</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\PyrMatchTemplate.h">
+      <Filter>Code Being Tested</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\MinMax.h">
       <Filter>Code Being Tested</Filter>
     </ClInclude>
   </ItemGroup>

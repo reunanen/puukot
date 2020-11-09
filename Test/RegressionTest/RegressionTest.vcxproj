@@ -11,11 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\MinMax.cpp" />
     <ClCompile Include="..\..\PyrMatchTemplate.cpp" />
     <ClCompile Include="PyrMatchTemplateTest.cpp" />
     <ClCompile Include="RegressionTestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\MinMax.h" />
     <ClInclude Include="..\..\PyrMatchTemplate.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -88,6 +90,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>$(OutDir)opencv.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>$(OutDir)$(TargetName)$(TargetExt)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
