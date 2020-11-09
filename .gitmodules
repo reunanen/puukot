@@ -1,6 +1,6 @@
 [submodule "Test/VisualTest/opencv-show-pixel-value"]
 	path = Test/VisualTest/opencv-show-pixel-value
 	url = https://github.com/reunanen/opencv-show-pixel-value
-[submodule "Test/opencv-binaries-vs"]
-	path = Test/opencv-binaries-vs
-	url = git@bitbucket.org:reunanen/opencv-binaries-vs
+[submodule "Test/opencv-build-vs"]
+	path = Test/opencv-build-vs
+	url = https://github.com/reunanen/opencv-build-vs

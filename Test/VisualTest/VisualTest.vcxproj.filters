@@ -25,6 +25,9 @@
       <Filter>show-pixel-value</Filter>
     </ClCompile>
     <ClCompile Include="VisualTest.cpp" />
+    <ClCompile Include="..\..\PyrMatchTemplate.cpp">
+      <Filter>puukot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\HighpassFilter.h">
@@ -41,6 +44,9 @@
     </ClInclude>
     <ClInclude Include="opencv-show-pixel-value\show-pixel-value-connecter.h">
       <Filter>show-pixel-value</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PyrMatchTemplate.h">
+      <Filter>puukot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
